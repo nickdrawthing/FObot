@@ -13,8 +13,15 @@ module.exports = {
 				if (data == ""){
 					console.log("TIS BLANK, MDUDE");
 					var actorsList = [];
+
+					// TODO
+					// Create PARTIES, not individual ACTORS. Those parties will be
+					// stored in the map array.
+
 					actorsList.push(new actors.Goodguy);
 					actorsList.push(new actors.Badguy);
+					
+
 					retVal.actrs = actorsList;
 
 					var noiseScale = 8;
@@ -66,7 +73,7 @@ module.exports = {
 					retVal = JSON.parse(data);
 					console.log(retVal);
 				}
-				callback(retVal.actrs);
+				callback(retVal);
 			}
 		});
 		console.log("=====RETURN VALUE=====\n" + retVal + "\n======RETURN END=====");

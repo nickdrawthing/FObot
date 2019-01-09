@@ -10,8 +10,15 @@ var armour = require("./armour.js");
 var weapon = require("./weapons.js");
 
 var getInput = {
-	getActorInputs: function(_actors){
-		for (let thisActor of _actors){
+	getActorInputs: function(_FOB){
+
+		// TODO:
+		// Make this check the PARTY array for each map tile rather than 
+		// check the actors list directly. This way it will be easier to 
+		// apply uniform situational effects based on grid squares, apply 
+		// party movements, etc.
+
+		for (let thisActor of _FOB.actrs){
 			if (thisActor.controlledByPlayer){
 				this.getUserInput(thisActor);
 			} else {
@@ -36,10 +43,10 @@ var getInput = {
 	}
 }
 
-function startInputTimer(_actors){
+function startInputTimer(_FOB){
 	setTimeout(function(){
 		prompt.pause();
-		for (let thisActor of _actors){
+		for (let thisActor of _FOB.actrs){
 			if (thisActor.act != null) {
 				console.log(thisActor.name + " " + thisActor.act + " his enemy");
 				thisActor.act = null;
@@ -51,24 +58,24 @@ function startInputTimer(_actors){
 			thisActor.inventory.rations++;
 			thisActor.inventory.weapons.grenades++;
 		}
-		overwriteActors(_actors);
+		overwriteActors(_FOB.actrs);
 		fileManagement.saveFile(FOB);
-		startInputCycle(FOB.actrs);
+		startInputCycle(FOB);
 	},time.sec*4);
 }
 
-function startInputCycle(_actors){
-	for (let ac of _actors){
+function startInputCycle(_FOB){
+	for (let ac of _FOB.actrs){
 		console.log(ac);
 	}
 	require('dns').resolve('www.twitter.com', function(err) {
 	  	if (err) {
 	    	console.log("No connection");
-	    	setTimeout(startInputCycle,1000*5,_actors);
+	    	setTimeout(startInputCycle,1000*5,_FOB);
 	  	} else {
 		    console.log("Connected");
-			getInput.getActorInputs(_actors);
-			startInputTimer(_actors);
+			getInput.getActorInputs(_FOB);
+			startInputTimer(_FOB);
 	  	}
 	});
 }
