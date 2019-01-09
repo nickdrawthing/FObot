@@ -49,6 +49,7 @@ function startInputTimer(_actors){
 			thisActor.hp++;
 			thisActor.maxHP++;
 			thisActor.inventory.rations++;
+			thisActor.inventory.weapons.grenades++;
 		}
 		overwriteActors(_actors);
 		fileManagement.saveFile(FOB);

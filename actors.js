@@ -1,5 +1,5 @@
-var armour = require("./armour.js");
-var weapon = require("./weapons.js");
+const armour = require("./armour.js");
+const weapon = require("./weapons.js");
 
 class Actor{
 	constructor(){
