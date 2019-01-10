@@ -8,6 +8,7 @@ var fileManagement = require("./fileManagement.js");
 var prompt = require("prompt");
 var armour = require("./armour.js");
 var weapon = require("./weapons.js");
+var party = require("./party.js");
 
 var getInput = {
 	getActorInputs: function(_FOB){

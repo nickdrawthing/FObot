@@ -1,5 +1,6 @@
 var fs = require('fs');
 var SimplexNoise = require('simplex-noise');
+var party = require("./party.js");
 
 module.exports = {
 	loadFile: function(actors, callback){
