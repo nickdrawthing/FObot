@@ -1,3 +1,17 @@
+/*
+
+Party_n {
+	name: ,
+	members: [43,45,56],
+	dangerVal: .3534567,
+	faction: 4,
+	affinity: [true, true, false, true, false],
+	pool: {}
+}
+
+*/
+
+
 var actors = require("./actors.js");
 
 function createSplinterParty(members){
@@ -8,16 +22,47 @@ function createSplinterParty(members){
 	return retObj;
 }
 
-function createNewParty(isPlayer){
-	var retObj = {};
-	retObj.party = new Party;
-	if (isPlayer){
-		retObj.actors = [new actors.Goodguy];
-	} else {
-		retObj.actors = [new actors.Badguy];
+function createNewParty(){
+	// create actors
+	var acts = [];
+	for (var i = 0; i < 3; i++){
+		acts.push(new actors.Badguy);
 	}
-	retObj.party.dangerVal = calculateDangerVal(retObj.actors);
+
+	// create party
+	var party = new Party;
+	party.dangerVal = calculateDangerVal(acts);
+
+	// create return object which contains actors and party
+	var retObj = {};
+	retObj.party = party;
+	retObj.actors = acts;
+	// console.log("party made: " + retObj);
 	return retObj;
+}
+
+function createPlayerParty(actorVal){
+	// create player
+	var acts = [];
+	acts.push(new actors.Goodguy);
+	acts[0].actorVal = actorVal;
+
+	// create party
+	var party = new Party;
+	party.isPlayer = true;
+	party.dangerVal = calculateDangerVal(acts);
+
+	// create return object which contains actors and party
+	var retObj = {};
+	retObj.party = party;
+	retObj.actors = acts;
+	// console.log("p1 party made: " + retObj);
+
+	return retObj;
+}
+
+function disbandParty(){
+
 }
 
 function distributeInventory(party, members){
@@ -34,6 +79,7 @@ function calculateDangerVal(members){
 
 class Party{
 	constructor(){
+		this.isPlayer = false;
 		this.pool = {};
 		this.members = [];
 		this.dangerVal = 0;
@@ -45,6 +91,8 @@ class Party{
 module.exports = {
 	createSplinterParty,
 	createNewParty,
+	createPlayerParty,
+	disbandParty,
 	distributeInventory,
 	Party
 }

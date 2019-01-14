@@ -10,22 +10,28 @@ var armour = require("./armour.js");
 var weapon = require("./weapons.js");
 var party = require("./party.js");
 
+var mapFuncs = {
+	partyMove: function(_FOB,address,dir){
+		
+	}
+}
+
 var getInput = {
 	getActorInputs: function(_FOB){
-
-		// TODO:
-		// Make this check the PARTY array for each map tile rather than 
-		// check the actors list directly. This way it will be easier to 
-		// apply uniform situational effects based on grid squares, apply 
-		// party movements, etc.
-
-		for (let thisActor of _FOB.actrs){
-			if (thisActor.controlledByPlayer){
-				this.getUserInput(thisActor);
-			} else {
-				this.getAIInput(thisActor);
-			}
-		}
+		_FOB.map.forEach(function(mapRow){
+			mapRow.forEach(function(mapCell){
+				mapCell.parties.forEach(function(thisParty){
+					thisParty.members.forEach(function(thisActor){
+						if (_FOB.actrs[thisActor].controlledByPlayer){
+							console.log("FOUND THE PLAYER");
+							getInput.getUserInput(_FOB.actrs[thisActor]);
+						} else {
+							getInput.getAIInput(_FOB.actrs[thisActor]);
+						}
+					})
+				})
+			})
+		});
 	},
 
 	getAIInput: function(_actor){
@@ -59,15 +65,17 @@ function startInputTimer(_FOB){
 			thisActor.inventory.rations++;
 			thisActor.inventory.weapons.grenades++;
 		}
-		overwriteActors(_FOB.actrs);
-		fileManagement.saveFile(FOB);
+		// overwriteActors(_FOB.actrs,fileManagement.saveFile);
+		overwriteFOB(_FOB,fileManagement.saveFile)
+		// fileManagement.saveFile(FOB);
 		startInputCycle(FOB);
 	},time.sec*4);
 }
 
 function startInputCycle(_FOB){
+	// console.log(_FOB);
 	for (let ac of _FOB.actrs){
-		console.log(ac);
+		// console.log(ac);
 	}
 	require('dns').resolve('www.twitter.com', function(err) {
 	  	if (err) {
@@ -81,8 +89,19 @@ function startInputCycle(_FOB){
 	});
 }
 	
-function overwriteActors(inPut){
+function overwriteActors(inPut, callback){
 	FOB.actrs = inPut;
+	callback(FOB);
+}
+
+function overwriteMap(inPut, callback){
+	FOB.map = inPut;
+	callback(FOB);
+}
+
+function overwriteFOB(inPut, callback){
+	FOB = inPut;
+	callback(FOB);
 }
 
 function main(){
@@ -91,8 +110,8 @@ function main(){
 }
 
 var FOB = {
-	actrs: [],
-	map: null,
+	// actrs: [],
+	// map: null,
 }
 
 main();
