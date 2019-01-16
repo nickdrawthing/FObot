@@ -13,6 +13,7 @@ function loadFile(actors, callback){
 				if (data == ""){
 					console.log("TIS BLANK, MDUDE");
 					var actorsList = [];
+					var partyList = [];
 
 					var noiseScale = 1;
 					retVal.mapSize = 3;
@@ -35,16 +36,17 @@ function loadFile(actors, callback){
 							} else {
 								partyObj = party.createNewParty();
 							}
-							console.log(partyObj);
+							// console.log(partyObj);
 							var actorListLength = actorsList.length;
 							for (var i = 0; i < partyObj.actors.length; i++){
 								actorsList.push(partyObj.actors[i]);
 								partyObj.party.members.push(actorListLength + i);
 							}
-							// actorsList.push(partyObj.actors);
 							// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+							partyList.push(partyObj.party);
+							var partyListLength = partyList.length;
 							var mapCell = {
-								parties: [partyObj.party],
+								parties: [partyListLength-1],
 								destructVal:destructSeed.noise2D((1+x)/noiseScale,(1+y)/noiseScale),
 								urbanVal:urbanSeed.noise2D((1+x)/noiseScale,(1+y)/noiseScale)
 							};
@@ -73,6 +75,7 @@ function loadFile(actors, callback){
 					}
 					retVal.map = map;
 					retVal.actrs = actorsList;
+					retVal.parties = partyList;
 				} else {
 					retVal = JSON.parse(data);
 				}

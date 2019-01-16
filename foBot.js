@@ -9,10 +9,11 @@ var prompt = require("prompt");
 var armour = require("./armour.js");
 var weapon = require("./weapons.js");
 var party = require("./party.js");
+var map = require("./map.js");
 
 var mapFuncs = {
 	partyMove: function(_FOB,address,dir){
-		
+
 	}
 }
 
@@ -20,17 +21,23 @@ var getInput = {
 	getActorInputs: function(_FOB){
 		_FOB.map.forEach(function(mapRow){
 			mapRow.forEach(function(mapCell){
+				// Map Cell v
 				mapCell.parties.forEach(function(thisParty){
-					thisParty.members.forEach(function(thisActor){
+					// thisParty is an array address for _FOB.party
+					_FOB.parties[thisParty].members.forEach(function(thisActor){
+						// thisActor is an array address for _FOB.actrs
+						// console.log(_FOB.actrs[thisActor]);
 						if (_FOB.actrs[thisActor].controlledByPlayer){
-							console.log("FOUND THE PLAYER");
+							// console.log("FOUND THE PLAYER");
+							console.log("You share a zone with " + (mapCell.parties.length -1) + " other parties");
 							getInput.getUserInput(_FOB.actrs[thisActor]);
 						} else {
 							getInput.getAIInput(_FOB.actrs[thisActor]);
 						}
-					})
-				})
-			})
+
+					});
+				});
+			});
 		});
 	},
 
@@ -51,25 +58,44 @@ var getInput = {
 }
 
 function startInputTimer(_FOB){
-	setTimeout(function(){
-		prompt.pause();
-		for (let thisActor of _FOB.actrs){
-			if (thisActor.act != null) {
-				console.log(thisActor.name + " " + thisActor.act + " his enemy");
-				thisActor.act = null;
+	setTimeout(parseActorInput,time.sec*8,_FOB,startInputCycle);
+}
+
+function parseActorInput(_FOB, callback){
+	prompt.pause();
+	// for (let thisActor of _FOB.actrs){
+	for (var i = 0; i < _FOB.actrs.length; i++){
+		var thisActor = _FOB.actrs[i];
+		if (thisActor.act != null) {
+			if (thisActor.act == "W" || thisActor.act == "w"){
+				_FOB.map = map.moveParty(_FOB.map,i,-1,0);
+				console.log("You go North");
+			} else if (thisActor.act == "S" || thisActor.act == "s"){
+				_FOB.map = map.moveParty(_FOB.map,i,1,0);
+				console.log("You go South");
+			} else if (thisActor.act == "D" || thisActor.act == "d"){
+				_FOB.map = map.moveParty(_FOB.map,i,0,1);
+				console.log("You go East");
+			} else if (thisActor.act == "A" || thisActor.act == "a"){
+				_FOB.map = map.moveParty(_FOB.map,i,0,-1);
+				console.log("You go West");
 			} else {
-				console.log(thisActor.name + " does nothing");
+				// console.log(thisActor.name + " " + thisActor.act + " his enemy");
+				// thisActor.act = null;
 			}
-			thisActor.hp++;
-			thisActor.maxHP++;
-			thisActor.inventory.rations++;
-			thisActor.inventory.weapons.grenades++;
+		} else {
+			// console.log(thisActor.name + " does nothing");
 		}
-		// overwriteActors(_FOB.actrs,fileManagement.saveFile);
-		overwriteFOB(_FOB,fileManagement.saveFile)
-		// fileManagement.saveFile(FOB);
-		startInputCycle(FOB);
-	},time.sec*4);
+		thisActor.act = null;
+		thisActor.hp++;
+		thisActor.maxHP++;
+		thisActor.inventory.rations++;
+		thisActor.inventory.weapons.grenades++;
+	}
+	// overwriteActors(_FOB.actrs,fileManagement.saveFile);
+	overwriteFOB(_FOB,fileManagement.saveFile)
+	// fileManagement.saveFile(FOB);
+	callback(FOB);
 }
 
 function startInputCycle(_FOB){
