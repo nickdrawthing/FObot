@@ -1,6 +1,6 @@
 var fs = require('fs');
-var SimplexNoise = require('simplex-noise');
 var party = require("./party.js");
+var map = require("./map.js");
 
 function loadFile(actors, callback){
 	var retVal = {};
@@ -14,21 +14,11 @@ function loadFile(actors, callback){
 					console.log("TIS BLANK, MDUDE");
 					var actorsList = [];
 					var partyList = [];
-
-					var noiseScale = 1;
 					retVal.mapSize = 3;
-
-					var map = [];
-					var destructSeed = new SimplexNoise(Math.random + 'destruct');
-					var lowestDestruct = 2;
-					var highestDestruct  = -2;
-					var urbanSeed = new SimplexNoise(Math.random + 'urban');
-					var lowestUrban = 2;
-					var highestUrban  = -2;
-					
-					for (let x = 0; x < retVal.mapSize; x++){
-						var mapRow = [];
-						for (let y = 0; y < retVal.mapSize; y++){
+					var thisMap = map.makeNewMap(retVal.mapSize);
+				
+					for (let x = 0; x < thisMap.length; x++){
+						for (let y = 0; y < thisMap[x].length; y++){
 							//VVVVV THIS IS TEMP AND NEEDS TO BE MORE ROBUST VVVVV
 							var partyObj;
 							if (y == 0 && x == 0){
@@ -36,7 +26,6 @@ function loadFile(actors, callback){
 							} else {
 								partyObj = party.createNewParty();
 							}
-							// console.log(partyObj);
 							var actorListLength = actorsList.length;
 							for (var i = 0; i < partyObj.actors.length; i++){
 								actorsList.push(partyObj.actors[i]);
@@ -45,35 +34,10 @@ function loadFile(actors, callback){
 							// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 							partyList.push(partyObj.party);
 							var partyListLength = partyList.length;
-							var mapCell = {
-								parties: [partyListLength-1],
-								destructVal:destructSeed.noise2D((1+x)/noiseScale,(1+y)/noiseScale),
-								urbanVal:urbanSeed.noise2D((1+x)/noiseScale,(1+y)/noiseScale)
-							};
-							if (mapCell.destructVal < lowestDestruct){
-								lowestDestruct = mapCell.destructVal;
-							}
-							if (mapCell.destructVal > highestDestruct){
-								highestDestruct = mapCell.destructVal;
-							}
-							if (mapCell.urbanVal < lowestUrban){
-								lowestUrban = mapCell.urbanVal;
-							}
-							if (mapCell.urbanVal > highestUrban){
-								highestUrban = mapCell.urbanVal;
-							}
-							// console.log(mapCell);
-							mapRow.push(mapCell);
-						}
-						map.push(mapRow);
-					}
-					for (let x = 0; x < retVal.mapSize; x++){
-						for (let y = 0; y < retVal.mapSize; y++){
-							map[x][y].destructVal = scaleNormalize(map[x][y].destructVal,lowestDestruct,highestDestruct);
-							map[x][y].urbanVal = scaleNormalize(map[x][y].urbanVal,lowestUrban,highestUrban);
+							thisMap[x][y].parties.push(partyListLength-1);
 						}
 					}
-					retVal.map = map;
+					retVal.map = thisMap;
 					retVal.actrs = actorsList;
 					retVal.parties = partyList;
 				} else {
@@ -83,10 +47,6 @@ function loadFile(actors, callback){
 			}
 		});
 	return retVal;
-
-	function scaleNormalize(val, low, high){
-		return (val-low) / (high-low);
-	}
 }
 
 function saveFile(JSONdata){

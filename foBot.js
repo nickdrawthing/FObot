@@ -42,10 +42,17 @@ var getInput = {
 	},
 
 	getAIInput: function(_actor){
-		if (Math.random() < 0.5){
-			_actor.act = "ignores";
-		} else {
-			_actor.act = "shoots at";
+		var randChoice = Math.random();
+		if (randChoice < 0.2){
+			_actor.act = "w";
+		} else if (randChoice >= 0.2 && randChoice < 0.4){
+			_actor.act = "a";
+		} else if (randChoice >= 0.4 && randChoice < 0.6){
+			_actor.act = "s";
+		} else if (randChoice >= 0.6 && randChoice < 0.8){
+			_actor.act = "d";
+		} else if (randChoice >= 0.8){
+			_actor.act = null;
 		}
 	},
 
