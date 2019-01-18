@@ -14,7 +14,7 @@ function loadFile(actors, callback){
 					console.log("TIS BLANK, MDUDE");
 					var actorsList = [];
 					var partyList = [];
-					retVal.mapSize = 3;
+					retVal.mapSize = 50;
 					var thisMap = map.makeNewMap(retVal.mapSize);
 				
 					for (let x = 0; x < thisMap.length; x++){

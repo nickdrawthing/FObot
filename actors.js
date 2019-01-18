@@ -3,15 +3,27 @@ const weapon = require("./weapons.js");
 
 class Actor{
 	constructor(){
-		this.maxHP = 1;
-		this.hp = this.maxHP;
 		this.name = "Wiseguy";
 		this.controlledByPlayer = false;
+		this.max = {
+			hp:1,
+			stealth: 0,
+			strength: 0,
+			shooting: 0,
+			charm: 0
+		},
+		this.current = this.max;
+		this.broodiness = 0;
+		this.wanderlust = 0;
+		this.chumminess = 0;
+		this.independence = 0;
+		this.danger = 0;
+		this.aggro = 0;
 		this.act;
 		this.faction = 0;
 		this.affinity = [];
 		for(let i = 0; i < 25; i++){
-			// this.affinity.push(true);
+			this.affinity.push(true);
 		}
 		this.inventory = {
 			weapons: {
@@ -26,8 +38,16 @@ class Actor{
 				scrap: 0
 			},
 			rations: 0,
-			armour: armour.armour[0]
+			armour: armour.armour[0],
+			secret: []
 		}
+		this.quests = [];
+		this.newInfo = {
+			attack: [], // who YOU attacked {index: actor index num, hit: true or false, priority: 0}
+			defend: [], // who attacked YOU {index: actor index num, hit: true or false, priority: 0}
+			neighbours: [], // who else in cell (that you can see) {index: party index num, priority: 1}
+			misc: [] //
+		};
 	}
 }
 

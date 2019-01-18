@@ -53,6 +53,7 @@ function makeNewMap(arraySize){
 				description: "",
 				lairs: null,
 				parties: [],
+				loot: [],
 				destructVal:destructSeed.noise2D((1+x)/noiseScale,(1+y)/noiseScale),
 				urbanVal:urbanSeed.noise2D((1+x)/noiseScale,(1+y)/noiseScale)
 			};

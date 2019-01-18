@@ -27,9 +27,9 @@ var getInput = {
 					_FOB.parties[thisParty].members.forEach(function(thisActor){
 						// thisActor is an array address for _FOB.actrs
 						// console.log(_FOB.actrs[thisActor]);
+						
 						if (_FOB.actrs[thisActor].controlledByPlayer){
 							// console.log("FOUND THE PLAYER");
-							console.log("You share a zone with " + (mapCell.parties.length -1) + " other parties");
 							getInput.getUserInput(_FOB.actrs[thisActor]);
 						} else {
 							getInput.getAIInput(_FOB.actrs[thisActor]);
