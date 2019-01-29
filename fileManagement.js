@@ -1,6 +1,7 @@
 var fs = require('fs');
 var party = require("./party.js");
 var map = require("./map.js");
+var printMap = require("./printMap.js");
 
 function loadFile(actors, callback){
 	var retVal = {};
@@ -14,7 +15,7 @@ function loadFile(actors, callback){
 					console.log("TIS BLANK, MDUDE");
 					var actorsList = [];
 					var partyList = [];
-					retVal.mapSize = 50;
+					retVal.mapSize = 35;
 					var thisMap = map.makeNewMap(retVal.mapSize);
 				
 					for (let x = 0; x < thisMap.length; x++){
@@ -54,6 +55,7 @@ function saveFile(JSONdata){
 	fs.writeFile('saveData.txt', data, function(err,data){
 		if (err) console.log(err);
 		console.log("saved successfully");
+		printMap.showMap();
 	});
 }
 

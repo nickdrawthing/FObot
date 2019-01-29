@@ -27,7 +27,7 @@ var getInput = {
 					_FOB.parties[thisParty].members.forEach(function(thisActor){
 						// thisActor is an array address for _FOB.actrs
 						// console.log(_FOB.actrs[thisActor]);
-						
+
 						if (_FOB.actrs[thisActor].controlledByPlayer){
 							// console.log("FOUND THE PLAYER");
 							getInput.getUserInput(_FOB.actrs[thisActor]);
@@ -65,7 +65,7 @@ var getInput = {
 }
 
 function startInputTimer(_FOB){
-	setTimeout(parseActorInput,time.sec*8,_FOB,startInputCycle);
+	setTimeout(parseActorInput,time.sec*4,_FOB,startInputCycle);
 }
 
 function parseActorInput(_FOB, callback){
@@ -76,16 +76,16 @@ function parseActorInput(_FOB, callback){
 		if (thisActor.act != null) {
 			if (thisActor.act == "W" || thisActor.act == "w"){
 				_FOB.map = map.moveParty(_FOB.map,i,-1,0);
-				console.log("You go North");
+				// console.log("You go North");
 			} else if (thisActor.act == "S" || thisActor.act == "s"){
 				_FOB.map = map.moveParty(_FOB.map,i,1,0);
-				console.log("You go South");
+				// console.log("You go South");
 			} else if (thisActor.act == "D" || thisActor.act == "d"){
 				_FOB.map = map.moveParty(_FOB.map,i,0,1);
-				console.log("You go East");
+				// console.log("You go East");
 			} else if (thisActor.act == "A" || thisActor.act == "a"){
 				_FOB.map = map.moveParty(_FOB.map,i,0,-1);
-				console.log("You go West");
+				// console.log("You go West");
 			} else {
 				// console.log(thisActor.name + " " + thisActor.act + " his enemy");
 				// thisActor.act = null;
@@ -113,7 +113,7 @@ function startInputCycle(_FOB){
 	require('dns').resolve('www.twitter.com', function(err) {
 	  	if (err) {
 	    	console.log("No connection");
-	    	setTimeout(startInputCycle,1000*5,_FOB);
+	    	setTimeout(startInputCycle,1000*2.5,_FOB);
 	  	} else {
 		    console.log("Connected");
 			getInput.getActorInputs(_FOB);
