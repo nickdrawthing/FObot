@@ -46,7 +46,11 @@ class Actor{
 			attack: [], // who YOU attacked {index: actor index num, hit: true or false, priority: 0}
 			defend: [], // who attacked YOU {index: actor index num, hit: true or false, priority: 0}
 			neighbours: [], // who else in cell (that you can see) {index: party index num, priority: 1}
-			misc: [] //
+			casualties: [], // who has died in this update
+			misc: [], //
+			distrib: function(){
+
+			}
 		};
 	}
 }
@@ -56,6 +60,9 @@ class Goodguy extends Actor{
 		super();
 		this.name = "Goodguy";
 		this.controlledByPlayer = true;
+		this.distrib = function(){
+
+		}
 	}
 }
 

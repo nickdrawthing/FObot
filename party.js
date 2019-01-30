@@ -10,7 +10,54 @@ Party_n {
 }
 
 */
+var utils = require("./utils.js");
+var map = require("./map.js");
 
+class Party{
+	constructor(){
+		this.isPlayer = false;
+		this.pool = {};
+		this.members = [];
+		this.dangerVal = 0;
+		this.faction = 0;
+		this.affinity = [];
+		this.movement = []; // should contain an array of integers ranging from 0 to 5
+	}
+	determineMovement(mapp, partyNum){
+		var moveTally = [0,0,0,0,0]; // [no movement, north, east, south, west]
+		var sumMoves = 0;
+		for (var mv of this.movement){
+			moveTally[mv]++;
+			sumMoves += mv;
+		}
+		this.movement = [];
+		if (sumMoves > 0){
+			var mostVotes = 0;
+			var voteOpts = [];
+			for (var i = 0; i < moveTally.length; i++){
+				if (moveTally[i] > mostVotes){
+					mostVotes = moveTally[i];
+					voteOpts = [i];
+				} else if (moveTally[i] == mostVotes) {
+					voteOpts.push(i);
+				}
+			}
+			voteOpts = utils.shuffleArr(voteOpts);
+			if (voteOpts[0] != 0){
+				if (voteOpts[0] == 1){
+					mapp = map.moveParty(mapp, partyNum, -1, 0);
+				} else if (voteOpts[0] == 2){
+					mapp = map.moveParty(mapp, partyNum, 0, 1);
+				} else if (voteOpts[0] == 3){
+					 mapp = map.moveParty(mapp, partyNum, 1, 0);
+				} else if (voteOpts[0] == 4){
+					mapp = map.moveParty(mapp, partyNum, 0, -1);
+				}
+			}
+		}
+		return mapp;
+	}
+}
 
 var actors = require("./actors.js");
 
@@ -75,17 +122,6 @@ function distributeInventory(party, members){
 
 function calculateDangerVal(members){
 	return 0;
-}
-
-class Party{
-	constructor(){
-		this.isPlayer = false;
-		this.pool = {};
-		this.members = [];
-		this.dangerVal = 0;
-		this.faction = 0;
-		this.affinity = [];
-	}
 }
 
 module.exports = {
