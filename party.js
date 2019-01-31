@@ -15,6 +15,7 @@ var map = require("./map.js");
 
 class Party{
 	constructor(){
+		this.registry;
 		this.isPlayer = false;
 		this.pool = {};
 		this.members = [];
@@ -56,6 +57,16 @@ class Party{
 			}
 		}
 		return mapp;
+	}
+	updateRegistry(num, actrs){
+		// update own registry
+		this.registry = num;
+		// update registry of party members
+		var membs = this.members;
+		for (var mem of membs){
+			actrs[mem].party = num;
+		}
+		return actrs;
 	}
 }
 

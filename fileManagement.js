@@ -17,25 +17,30 @@ function loadFile(actors, callback){
 					var partyList = [];
 					retVal.mapSize = 35;
 					var thisMap = map.makeNewMap(retVal.mapSize);
-				
+					var madeplayer = false;
 					for (let x = 0; x < thisMap.length; x++){
 						for (let y = 0; y < thisMap[x].length; y++){
 							//VVVVV THIS IS TEMP AND NEEDS TO BE MORE ROBUST VVVVV
-							var partyObj;
-							if (y == 0 && x == 0){
-								partyObj = party.createPlayerParty(0);
-							} else {
-								partyObj = party.createNewParty();
+							if (Math.random()>0.95){
+								var partyObj;
+								if (!madeplayer){
+									partyObj = party.createPlayerParty(0);
+									madeplayer = true;
+								} else {
+									partyObj = party.createNewParty();
+								}
+								var actorListLength = actorsList.length;
+								for (var i = 0; i < partyObj.actors.length; i++){
+									actorsList.push(partyObj.actors[i]);
+									partyObj.party.members.push(actorListLength + i);
+									actorsList[actorsList.length-1].updateRegistry(actorsList.length-1);
+								}
+								// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+								partyList.push(partyObj.party);
+								var partyListLength = partyList.length;
+								thisMap[x][y].parties.push(partyListLength-1);
+								actorsList = partyList[partyList.length-1].updateRegistry(partyList.length-1,actorsList);
 							}
-							var actorListLength = actorsList.length;
-							for (var i = 0; i < partyObj.actors.length; i++){
-								actorsList.push(partyObj.actors[i]);
-								partyObj.party.members.push(actorListLength + i);
-							}
-							// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-							partyList.push(partyObj.party);
-							var partyListLength = partyList.length;
-							thisMap[x][y].parties.push(partyListLength-1);
 						}
 					}
 					retVal.map = thisMap;
