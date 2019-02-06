@@ -75,18 +75,23 @@ function parseActorInput(_FOB, callback){
 		var thisActor = _FOB.actrs[i];
 		if (thisActor.act != null) {
 			if (thisActor.act == "W" || thisActor.act == "w"){
-				_FOB.map = map.moveParty(_FOB.map,i,-1,0);
+				_FOB.parties[thisActor.party].movement.push(1);
+				// _FOB.map = map.moveParty(_FOB.map,i,-1,0);
 				// console.log("You go North");
 			} else if (thisActor.act == "S" || thisActor.act == "s"){
-				_FOB.map = map.moveParty(_FOB.map,i,1,0);
+				_FOB.parties[thisActor.party].movement.push(3);
+				// _FOB.map = map.moveParty(_FOB.map,i,1,0);
 				// console.log("You go South");
 			} else if (thisActor.act == "D" || thisActor.act == "d"){
-				_FOB.map = map.moveParty(_FOB.map,i,0,1);
+				_FOB.parties[thisActor.party].movement.push(2);
+				// _FOB.map = map.moveParty(_FOB.map,i,0,1);
 				// console.log("You go East");
 			} else if (thisActor.act == "A" || thisActor.act == "a"){
-				_FOB.map = map.moveParty(_FOB.map,i,0,-1);
+				_FOB.parties[thisActor.party].movement.push(4);
+				// _FOB.map = map.moveParty(_FOB.map,i,0,-1);
 				// console.log("You go West");
 			} else {
+				_FOB.parties[thisActor.party].movement.push(0);
 				// console.log(thisActor.name + " " + thisActor.act + " his enemy");
 				// thisActor.act = null;
 			}
@@ -99,6 +104,12 @@ function parseActorInput(_FOB, callback){
 		thisActor.inventory.rations++;
 		thisActor.inventory.weapons.grenades++;
 	}
+
+	// check parties for movement
+	for (var i = 0; i < _FOB.parties.length; i++){
+		_FOB.map = party.determineMovement(_FOB.map, i, _FOB.parties[i]);
+	}
+
 	// overwriteActors(_FOB.actrs,fileManagement.saveFile);
 	overwriteFOB(_FOB,fileManagement.saveFile)
 	// fileManagement.saveFile(FOB);

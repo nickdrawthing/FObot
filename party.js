@@ -23,51 +23,97 @@ class Party{
 		this.faction = 0;
 		this.affinity = [];
 		this.movement = []; // should contain an array of integers ranging from 0 to 5
-	}
-	determineMovement(mapp, partyNum){
-		var moveTally = [0,0,0,0,0]; // [no movement, north, east, south, west]
-		var sumMoves = 0;
-		for (var mv of this.movement){
-			moveTally[mv]++;
-			sumMoves += mv;
-		}
-		this.movement = [];
-		if (sumMoves > 0){
-			var mostVotes = 0;
-			var voteOpts = [];
-			for (var i = 0; i < moveTally.length; i++){
-				if (moveTally[i] > mostVotes){
-					mostVotes = moveTally[i];
-					voteOpts = [i];
-				} else if (moveTally[i] == mostVotes) {
-					voteOpts.push(i);
+		this.determineMovement = function(mapp, partyNum){
+			var moveTally = [0,0,0,0,0]; // [no movement, north, east, south, west]
+			var sumMoves = 0;
+			for (var mv of this.movement){
+				moveTally[mv]++;
+				sumMoves += mv;
+			}
+			this.movement = [];
+			if (sumMoves > 0){
+				var mostVotes = 0;
+				var voteOpts = [];
+				for (var i = 0; i < moveTally.length; i++){
+					if (moveTally[i] > mostVotes){
+						mostVotes = moveTally[i];
+						voteOpts = [i];
+					} else if (moveTally[i] == mostVotes) {
+						voteOpts.push(i);
+					}
+				}
+				voteOpts = utils.shuffleArr(voteOpts);
+				if (voteOpts[0] != 0){
+					if (voteOpts[0] == 1){
+						mapp = map.moveParty(mapp, partyNum, -1, 0);
+					} else if (voteOpts[0] == 2){
+						mapp = map.moveParty(mapp, partyNum, 0, 1);
+					} else if (voteOpts[0] == 3){
+						 mapp = map.moveParty(mapp, partyNum, 1, 0);
+					} else if (voteOpts[0] == 4){
+						mapp = map.moveParty(mapp, partyNum, 0, -1);
+					}
 				}
 			}
-			voteOpts = utils.shuffleArr(voteOpts);
-			if (voteOpts[0] != 0){
-				if (voteOpts[0] == 1){
-					mapp = map.moveParty(mapp, partyNum, -1, 0);
-				} else if (voteOpts[0] == 2){
-					mapp = map.moveParty(mapp, partyNum, 0, 1);
-				} else if (voteOpts[0] == 3){
-					 mapp = map.moveParty(mapp, partyNum, 1, 0);
-				} else if (voteOpts[0] == 4){
-					mapp = map.moveParty(mapp, partyNum, 0, -1);
-				}
+			return mapp;
+		}
+		this.updateRegistry = function(num, actrs){
+			// update own registry
+			this.registry = num;
+			// update registry of party members
+			var membs = this.members;
+			for (var mem of membs){
+				actrs[mem].party = num;
+			}
+			return actrs;
+		}
+	}
+}
+
+function updateRegistry(num, actrs, thisActor){
+	// update own registry
+	thisActor.registry = num;
+	// update registry of party members
+	var membs = thisActor.members;
+	for (var mem of membs){
+		actrs[mem].party = num;
+	}
+	return actrs;
+}
+
+function determineMovement(mapp, partyNum, thisParty){
+	var moveTally = [0,0,0,0,0]; // [no movement, north, east, south, west]
+	var sumMoves = 0;
+	for (var mv of thisParty.movement){
+		moveTally[mv]++;
+		sumMoves += mv;
+	}
+	thisParty.movement = [];
+	if (sumMoves > 0){
+		var mostVotes = 0;
+		var voteOpts = [];
+		for (var i = 0; i < moveTally.length; i++){
+			if (moveTally[i] > mostVotes){
+				mostVotes = moveTally[i];
+				voteOpts = [i];
+			} else if (moveTally[i] == mostVotes) {
+				voteOpts.push(i);
 			}
 		}
-		return mapp;
-	}
-	updateRegistry(num, actrs){
-		// update own registry
-		this.registry = num;
-		// update registry of party members
-		var membs = this.members;
-		for (var mem of membs){
-			actrs[mem].party = num;
+		voteOpts = utils.shuffleArr(voteOpts);
+		if (voteOpts[0] != 0){
+			if (voteOpts[0] == 1){
+				mapp = map.moveParty(mapp, partyNum, -1, 0);
+			} else if (voteOpts[0] == 2){
+				mapp = map.moveParty(mapp, partyNum, 0, 1);
+			} else if (voteOpts[0] == 3){
+				 mapp = map.moveParty(mapp, partyNum, 1, 0);
+			} else if (voteOpts[0] == 4){
+				mapp = map.moveParty(mapp, partyNum, 0, -1);
+			}
 		}
-		return actrs;
 	}
+	return mapp;
 }
 
 var actors = require("./actors.js");
@@ -136,6 +182,8 @@ function calculateDangerVal(members){
 }
 
 module.exports = {
+	determineMovement,
+	updateRegistry,
 	createSplinterParty,
 	createNewParty,
 	createPlayerParty,
