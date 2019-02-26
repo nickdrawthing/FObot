@@ -179,5 +179,13 @@ module.exports = {
 			retVal += "and " + items[items.length-1];
 		}
 		return retVal;
+	},
+
+	punctuate: function(inString){
+		var lastChar = inString.substring(inString.length-1,inString.length);
+		if (lastChar != "!" && lastChar != "." && lastChar != "?"){
+			inString += ".";
+		}
+		return inString;
 	}
 };

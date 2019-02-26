@@ -50,11 +50,16 @@ class Actor{
 			neighbours: [], // who have you just seen for the first time {index: party index num, priority: 1}
 			departures: [], // who has left the cell, and in which direction {index: party index num, dir: direction, priority: 1}
 			casualties: [], // who has died in this update
-			misc: [], //
-			distrib: function(){
-
-			}
+			misc: [] //
 		};
+		this.info = {
+			visibleNeighbours: [],
+			visibleItems: [],
+			visibleContainers: [],
+			visibleLairs: []
+		}
+		this.oauth = null;
+		this.distribFuncVal = 0;
 		this.visibleNeighbours = [];
 	}
 	updateRegistry(num){
@@ -62,14 +67,36 @@ class Actor{
 	}
 }
 
+var distribFuncs = [
+	function(oauth,input){
+
+	},
+	function(oauth,input){
+		var reportString = createReportString(input);
+		console.log(reportString); 
+	},
+	function(oauth,input){
+		var reportString = createReportString(input);
+		//tweet that shit
+	}
+];
+
+function createReportString(input){
+	var txtPrs = require("./text_parser.js");
+	var reportString = "BLANK";
+	//var attackedList = //create string of names of who you attacked
+	//if attackedList != "" then concat "You were attacked by " and then the attackedList
+	//repeat this process for defend, neighbours, departures, and casualties
+	//concat misc strings as-is
+	return reportString;
+}
+
 class Goodguy extends Actor{
 	constructor(){
 		super();
 		this.name = "Goodguy";
 		this.controlledByPlayer = true;
-		this.distrib = function(){
-
-		}
+		this.distribFuncVal = 1;
 	}
 }
 
@@ -95,5 +122,6 @@ class Badguy extends Actor{
 module.exports = {
 	Actor,
 	Goodguy,
-	Badguy
+	Badguy,
+	distribFuncs
 }

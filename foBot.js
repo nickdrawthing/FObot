@@ -110,6 +110,11 @@ function parseActorInput(_FOB, callback){
 		_FOB.map = party.determineMovement(_FOB.map, i, _FOB.parties[i]);
 	}
 
+	for (var i = 0; i < _FOB.actrs.length; i++){
+		var thisActor = _FOB.actrs[i];
+		actors.distribFuncs[thisActor.distribFuncVal](thisActor.oauth,thisActor.newInfo);
+	}
+
 	// overwriteActors(_FOB.actrs,fileManagement.saveFile);
 	overwriteFOB(_FOB,fileManagement.saveFile)
 	// fileManagement.saveFile(FOB);
@@ -122,7 +127,7 @@ function startInputCycle(_FOB){
 		// console.log(ac);
 	}
 	require('dns').resolve('www.twitter.com', function(err) {
-	  	if (err) {
+	  	if (!err) {
 	    	console.log("No connection");
 	    	setTimeout(startInputCycle,1000*2.5,_FOB);
 	  	} else {
