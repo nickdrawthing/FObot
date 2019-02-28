@@ -12,6 +12,7 @@ function moveParty(map,partyNum,x,y){
 						// console.log("You go the way you wanted");
 						map[i][j].parties.splice(k,1);
 						map[i+x][j+y].parties.push(partyNum);
+						map[i+x][j+y].parties[map[i+x][j+y].parties.length-1].mapLoc = [i+x,j+y]; 
 						return map;
 					} else {
 						// console.log("You can't go that way");

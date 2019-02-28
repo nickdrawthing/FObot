@@ -113,6 +113,9 @@ function parseActorInput(_FOB, callback){
 	for (var i = 0; i < _FOB.actrs.length; i++){
 		var thisActor = _FOB.actrs[i];
 		actors.distribFuncs[thisActor.distribFuncVal](thisActor.oauth,thisActor.newInfo);
+		for (let attrib in thisActor.newInfo){
+			attrib = [];
+		}
 	}
 
 	// overwriteActors(_FOB.actrs,fileManagement.saveFile);
@@ -127,7 +130,7 @@ function startInputCycle(_FOB){
 		// console.log(ac);
 	}
 	require('dns').resolve('www.twitter.com', function(err) {
-	  	if (!err) {
+	  	if (err) {
 	    	console.log("No connection");
 	    	setTimeout(startInputCycle,1000*2.5,_FOB);
 	  	} else {

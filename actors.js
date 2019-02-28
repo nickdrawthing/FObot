@@ -3,6 +3,7 @@ const weapon = require("./weapons.js");
 
 class Actor{
 	constructor(){
+		this.mapLoc = [null,null];
 		this.party;
 		this.registry;
 		this.name = "Wiseguy";

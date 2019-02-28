@@ -16,6 +16,7 @@ var map = require("./map.js");
 class Party{
 	constructor(){
 		this.registry;
+		this.mapLoc = [null,null];
 		this.isPlayer = false;
 		this.pool = {};
 		this.members = [];

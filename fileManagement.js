@@ -34,9 +34,11 @@ function loadFile(actors, callback){
 									actorsList.push(partyObj.actors[i]);
 									partyObj.party.members.push(actorListLength + i);
 									actorsList[actorsList.length-1].updateRegistry(actorsList.length-1);
+									actorsList[actorsList.length-1].mapLoc = [x,y];
 								}
 								// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 								partyList.push(partyObj.party);
+								partyList[partyList.length-1].mapLoc = [x,y];
 								var partyListLength = partyList.length;
 								thisMap[x][y].parties.push(partyListLength-1);
 								actorsList = partyList[partyList.length-1].updateRegistry(partyList.length-1,actorsList);
