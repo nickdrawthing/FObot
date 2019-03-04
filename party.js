@@ -82,7 +82,7 @@ function updateRegistry(num, actrs, thisActor){
 	return actrs;
 }
 
-function determineMovement(mapp, partyNum, thisParty){
+function determineMovement(FOB, partyNum, thisParty){
 	var moveTally = [0,0,0,0,0]; // [no movement, north, east, south, west]
 	var sumMoves = 0;
 	for (var mv of thisParty.movement){
@@ -104,17 +104,17 @@ function determineMovement(mapp, partyNum, thisParty){
 		voteOpts = utils.shuffleArr(voteOpts);
 		if (voteOpts[0] != 0){
 			if (voteOpts[0] == 1){
-				mapp = map.moveParty(mapp, partyNum, -1, 0);
+				FOB = map.moveParty(FOB, partyNum, -1, 0);
 			} else if (voteOpts[0] == 2){
-				mapp = map.moveParty(mapp, partyNum, 0, 1);
+				FOB = map.moveParty(FOB, partyNum, 0, 1);
 			} else if (voteOpts[0] == 3){
-				 mapp = map.moveParty(mapp, partyNum, 1, 0);
+				 FOB = map.moveParty(FOB, partyNum, 1, 0);
 			} else if (voteOpts[0] == 4){
-				mapp = map.moveParty(mapp, partyNum, 0, -1);
+				FOB = map.moveParty(FOB, partyNum, 0, -1);
 			}
 		}
 	}
-	return mapp;
+	return FOB;
 }
 
 var actors = require("./actors.js");

@@ -1,27 +1,34 @@
 // var SimplexNoise = require('simplex-noise');
 var noiseJS = require("noisejs");
 
-function moveParty(map,partyNum,x,y){
-	// console.log("doing map thing. party num: " + partyNum);
-	for(var i = 0; i < map.length; i++){
-		for(var j = 0; j < map[i].length; j++){
-			for (var k = 0; k < map[i][j].parties.length; k++){
-				// console.log("PartyNum: " + partyNum + ", Map Cell Party: " + map[i][j].parties[k]);
-				if (map[i][j].parties[k] == partyNum){
-					if (testMapMove(map,i,j,x,y)){
+function moveParty(FOB,partyNum,x,y){
+	//loop through map, then loop through the parties in each cell
+	for(var i = 0; i < FOB.map.length; i++){
+		for(var j = 0; j < FOB.map[i].length; j++){
+			for (var k = 0; k < FOB.map[i][j].parties.length; k++){
+				// check if party is the one we're looking for
+				if (FOB.map[i][j].parties[k] == partyNum){
+					if (testMapMove(FOB.map,i,j,x,y)){
 						// console.log("You go the way you wanted");
-						map[i][j].parties.splice(k,1);
-						map[i+x][j+y].parties.push(partyNum);
-						map[i+x][j+y].parties[map[i+x][j+y].parties.length-1].mapLoc = [i+x,j+y]; 
-						return map;
+						FOB.map[i][j].parties.splice(k,1);
+						FOB.map[i+x][j+y].parties.push(partyNum);
+						FOB.map[i+x][j+y].parties[FOB.map[i+x][j+y].parties.length-1].mapLoc = [i+x,j+y];
+						// update the party and actor map location values 
+						FOB.parties[partyNum].mapLoc = [i+x,j+y];
+						for (var l = 0; l < FOB.parties[partyNum].members.length; l++){
+							FOB.actrs[FOB.parties[partyNum].members[l]].mapLoc = [i+x,j+y];
+							FOB.actrs[FOB.parties[partyNum].members[l]].newInfo.moved.push({moveDir: [x,y]});
+						}
+						return FOB;
 					} else {
 						// console.log("You can't go that way");
+						
 					}
 				}
 			}
 		}	
 	}
-	return map;
+	return FOB;
 
 	function testMapMove(map,x,y,moveX,moveY){
 		var retVal;

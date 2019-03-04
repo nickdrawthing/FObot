@@ -107,15 +107,16 @@ function parseActorInput(_FOB, callback){
 
 	// check parties for movement
 	for (var i = 0; i < _FOB.parties.length; i++){
-		_FOB.map = party.determineMovement(_FOB.map, i, _FOB.parties[i]);
+		_FOB = party.determineMovement(_FOB, i, _FOB.parties[i]);
 	}
 
+	// send text report to appropriate channel, then clear newInfo
 	for (var i = 0; i < _FOB.actrs.length; i++){
-		var thisActor = _FOB.actrs[i];
-		actors.distribFuncs[thisActor.distribFuncVal](thisActor.oauth,thisActor.newInfo);
-		for (let attrib in thisActor.newInfo){
-			attrib = [];
-		}
+		// var thisActor = _FOB.actrs[i];
+		actors.distribFuncs[_FOB.actrs[i].distribFuncVal](_FOB.actrs[i].oauth,_FOB.actrs[i].newInfo);
+		_FOB.actrs[i].newInfo = actors.newInfoBlank();
+		// _FOB.actrs[i] = thisActor;
+
 	}
 
 	// overwriteActors(_FOB.actrs,fileManagement.saveFile);

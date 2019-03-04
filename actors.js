@@ -1,6 +1,16 @@
 const armour = require("./armour.js");
 const weapon = require("./weapons.js");
 
+function newInfoBlank() { return {
+	attack: [{hit: false, enemy: "Jerry" , weapon: "blunderbuss"}], // who YOU attacked {index: actor index num, hit: true or false, priority: 0}
+	defend: [{hit: false, enemy: "Jerry" , weapon: "blunderbuss"}], // who attacked YOU {index: actor index num, hit: true or false, priority: 0}
+	moved: [], // what direction you moved {moveDir: [x,y]}
+	neighbours: [], // who have you just seen for the first time {index: party index num, priority: 1}
+	departures: [], // who has left the cell, and in which direction {index: party index num, dir: direction, priority: 1}
+	casualties: [], // who has died in this update
+	misc: [] //
+}};
+
 class Actor{
 	constructor(){
 		this.mapLoc = [null,null];
@@ -45,14 +55,7 @@ class Actor{
 			secret: []
 		};
 		this.quests = [];
-		this.newInfo = {
-			attack: [], // who YOU attacked {index: actor index num, hit: true or false, priority: 0}
-			defend: [], // who attacked YOU {index: actor index num, hit: true or false, priority: 0}
-			neighbours: [], // who have you just seen for the first time {index: party index num, priority: 1}
-			departures: [], // who has left the cell, and in which direction {index: party index num, dir: direction, priority: 1}
-			casualties: [], // who has died in this update
-			misc: [] //
-		};
+		this.newInfo = newInfoBlank();
 		this.info = {
 			visibleNeighbours: [],
 			visibleItems: [],
@@ -66,13 +69,14 @@ class Actor{
 	updateRegistry(num){
 		this.registry = num;
 	}
-}
+};
 
 var distribFuncs = [
 	function(oauth,input){
 
 	},
 	function(oauth,input){
+		console.log("GOT THIS FAR");
 		var reportString = createReportString(input);
 		console.log(reportString); 
 	},
@@ -84,12 +88,87 @@ var distribFuncs = [
 
 function createReportString(input){
 	var txtPrs = require("./text_parser.js");
-	var reportString = "BLANK";
+	var reportString = "";
+
+	// attack
+	if (input.attack.length > 0){
+		var attackStringArray = [];
+		for (let thisAttack of input.attack){
+			var thisAttackStringItem = "You";
+			thisAttackStringItem += (thisAttack.hit ? " hit " : " missed ");
+			thisAttackStringItem += "the " + thisAttack.enemy;
+			thisAttackStringItem += " with your " + thisAttack.weapon;
+			attackStringArray.push(thisAttackStringItem);
+		}
+		reportString += txtPrs.makeReadable(txtPrs.listifyStringArray(attackStringArray)) + "!\n";
+
+	}
+
+	// defend
+	if (input.defend.length > 0){
+		var attackStringArray = [];
+		for (let thisAttack of input.defend){
+			var thisAttackStringItem = "a ";
+			thisAttackStringItem += thisAttack.enemy;
+			thisAttackStringItem += (thisAttack.hit ? " hit " : " missed ");
+			thisAttackStringItem += "you with its " + thisAttack.weapon;
+			attackStringArray.push(thisAttackStringItem);
+		}
+		reportString += txtPrs.makeReadable(txtPrs.listifyStringArray(attackStringArray)) + "!\n";
+	}
+
+	// moved
+	if (input.moved.length > 0){
+		var allMoveStrings = "";
+		for (var i = 0; i < input.moved.length; i++){
+			var thisMoveString = "You traveled ";
+			if (input.moved[i].moveDir[0] == -1){
+				thisMoveString += "north";
+			} else if (input.moved[i].moveDir[0] == 1){
+				thisMoveString += "south";
+			}
+			if (input.moved[i].moveDir[1] == -1){
+				thisMoveString += "west";
+			} else if (input.moved[i].moveDir[1] == 1){
+				thisMoveString += "east";
+			}
+			allMoveStrings += txtPrs.makeReadable(thisMoveString) + "\n";
+		}
+		reportString += allMoveStrings;		
+	}
+
+	// neighbours
+	if (input.neighbours.length > 0){
+		
+	}
+
+	// departures
+	if (input.departures.length > 0){
+		
+	}
+
+	// casualties
+	if (input.casualties.length > 0){
+		
+	}
+
+	// misc
+	if (input.misc.length > 0){
+		
+	}
+
 	//var attackedList = //create string of names of who you attacked
 	//if attackedList != "" then concat "You were attacked by " and then the attackedList
 	//repeat this process for defend, neighbours, departures, and casualties
 	//concat misc strings as-is
 	return reportString;
+	// attack: [], // who YOU attacked {index: actor index num, hit: true or false, priority: 0}
+	// defend: [], // who attacked YOU {index: actor index num, hit: true or false, priority: 0}
+	// moved: [], // what direction you moved {moveDir: [x,y]}
+	// neighbours: [], // who have you just seen for the first time {index: party index num, priority: 1}
+	// departures: [], // who has left the cell, and in which direction {index: party index num, dir: direction, priority: 1}
+	// casualties: [], // who has died in this update
+	// misc: [] //
 }
 
 class Goodguy extends Actor{
@@ -124,5 +203,6 @@ module.exports = {
 	Actor,
 	Goodguy,
 	Badguy,
-	distribFuncs
+	distribFuncs,
+	newInfoBlank
 }
