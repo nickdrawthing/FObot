@@ -8,5 +8,29 @@ module.exports = {
 	        a[j] = x;
 	    }
 	    return a;
+	},
+
+	testStat: function(input){
+		var retVal = false;
+		if (Math.random() < input){
+			retVal = true;
+		}
+		return retVal;
+	},
+
+	testVs: function(inputA, inputB){
+		var retVal = false;
+		if (inputA > 0){
+			var aTest = false;
+			var bTest = false;
+			while ((!aTest && !bTest) || (aTest && bTest)){
+				aTest = this.testStat(inputA);
+				bTest = this.testStat(inputB);
+			}
+			if (aTest && !bTest){
+				retVal = true;
+			}
+		}
+		return retVal;
 	}
 }

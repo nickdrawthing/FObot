@@ -1,15 +1,17 @@
 const armour = require("./armour.js");
 const weapon = require("./weapons.js");
 
-function newInfoBlank() { return {
-	attack: [{hit: false, enemy: "Jerry" , weapon: "blunderbuss"}], // who YOU attacked {index: actor index num, hit: true or false, priority: 0}
-	defend: [{hit: false, enemy: "Jerry" , weapon: "blunderbuss"}], // who attacked YOU {index: actor index num, hit: true or false, priority: 0}
-	moved: [], // what direction you moved {moveDir: [x,y]}
-	neighbours: [], // who have you just seen for the first time {index: party index num, priority: 1}
-	departures: [], // who has left the cell, and in which direction {index: party index num, dir: direction, priority: 1}
-	casualties: [], // who has died in this update
-	misc: [] //
-}};
+function newInfoBlank() { 
+	return {
+		attack: [], // who YOU attacked {index: actor index num, hit: true or false, priority: 0}
+		defend: [], // who attacked YOU {index: actor index num, hit: true or false, priority: 0}
+		moved: [], // what direction you moved {moveDir: [x,y]}
+		neighbours: [], // who have you just seen for the first time {index: party index num, priority: 1}
+		departures: [], // who has left the cell, and in which direction {index: party index num, dir: direction, priority: 1}
+		casualties: [], // who has died in this update
+		misc: [] //
+	};
+};
 
 class Actor{
 	constructor(){
@@ -20,18 +22,20 @@ class Actor{
 		this.controlledByPlayer = false;
 		this.max = {
 			hp:1,
-			stealth: 0,
-			strength: 0,
-			shooting: 0,
-			charm: 0
+			stealth: 0.5,
+			strength: 0.5,
+			shooting: 0.5,
+			charm: 0.5,
+			perception: 0.5,
+			sneak: 0.5
 		};
 		this.current = this.max;
-		this.broodiness = 0;
-		this.wanderlust = 0;
-		this.chumminess = 0;
-		this.independence = 0;
-		this.danger = 0;
-		this.aggro = 0;
+		this.broodiness = 0.5;
+		this.wanderlust = 0.5;
+		this.chumminess = 0.5;
+		this.independence = 0.5;
+		this.danger = 0.5;
+		this.aggro = 0.5;
 		this.act;
 		this.faction = 0;
 		this.affinity = [];
@@ -139,28 +143,27 @@ function createReportString(input){
 
 	// neighbours
 	if (input.neighbours.length > 0){
-		
+		// gotta figure this out. Don't currently have access to the party or actors from here.
+		for (let nb of input.neighbours){
+			reportString += "You see a " + nb + ".\n";
+		}
 	}
 
 	// departures
 	if (input.departures.length > 0){
-		
+		// use the same logic as above ^ 
 	}
 
 	// casualties
 	if (input.casualties.length > 0){
-		
+		// ???? probably same as above?
 	}
 
 	// misc
-	if (input.misc.length > 0){
-		
+	for (var i = 0; i < input.misc.length; i++){
+		reportString += input.misc[i] + "\n";
 	}
 
-	//var attackedList = //create string of names of who you attacked
-	//if attackedList != "" then concat "You were attacked by " and then the attackedList
-	//repeat this process for defend, neighbours, departures, and casualties
-	//concat misc strings as-is
 	return reportString;
 	// attack: [], // who YOU attacked {index: actor index num, hit: true or false, priority: 0}
 	// defend: [], // who attacked YOU {index: actor index num, hit: true or false, priority: 0}

@@ -110,6 +110,33 @@ function parseActorInput(_FOB, callback){
 		_FOB = party.determineMovement(_FOB, i, _FOB.parties[i]);
 	}
 
+	// everybody does a perception check
+	var utils = require("./utils.js");
+	for (var i = 0; i < _FOB.map.length; i++){
+		for (var j = 0; j < _FOB.map[i].length; j++){
+			// cycle through all parties in map cell
+			for (var k = 0; k < _FOB.map[i][j].parties.length; k++){
+				var thisPartyRegNum = _FOB.map[i][j].parties[k];
+				for (var l = 0; l < _FOB.map[i][j].parties.length; l++){
+					if (_FOB.map[i][j].parties[l] != thisPartyRegNum){
+						var thatPartyRegNum = _FOB.map[i][j].parties[l];
+						// each member of "this" party looks at each member of "that" party
+						for (var m = 0; m < _FOB.parties[thisPartyRegNum].members.length; m++){
+							for (var n = 0; n < _FOB.parties[thatPartyRegNum].members.length; n++){
+								var thisActorNum = _FOB.parties[thisPartyRegNum].members[m];
+								var thatActorNum = _FOB.parties[thatPartyRegNum].members[n];
+								// TODO: check if you've alrady seen this character before!
+								if (utils.testVs(_FOB.actrs[thisActorNum].current.perception,_FOB.actrs[thatActorNum].current.sneak)){
+									_FOB.actrs[thisActorNum].newInfo.neighbours.push(_FOB.actrs[thatActorNum].name);
+								}
+							}	
+						}
+					}
+				}
+			}
+		}
+	}
+
 	// send text report to appropriate channel, then clear newInfo
 	for (var i = 0; i < _FOB.actrs.length; i++){
 		// var thisActor = _FOB.actrs[i];
@@ -131,7 +158,7 @@ function startInputCycle(_FOB){
 		// console.log(ac);
 	}
 	require('dns').resolve('www.twitter.com', function(err) {
-	  	if (err) {
+	  	if (!err) {
 	    	console.log("No connection");
 	    	setTimeout(startInputCycle,1000*2.5,_FOB);
 	  	} else {
