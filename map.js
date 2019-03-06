@@ -2,32 +2,34 @@
 var noiseJS = require("noisejs");
 
 function moveParty(FOB,partyNum,x,y){
-	//loop through map, then loop through the parties in each cell
-	for(var i = 0; i < FOB.map.length; i++){
-		for(var j = 0; j < FOB.map[i].length; j++){
-			for (var k = 0; k < FOB.map[i][j].parties.length; k++){
-				// check if party is the one we're looking for
-				if (FOB.map[i][j].parties[k] == partyNum){
-					if (testMapMove(FOB.map,i,j,x,y)){
-						// console.log("You go the way you wanted");
-						FOB.map[i][j].parties.splice(k,1);
-						FOB.map[i+x][j+y].parties.push(partyNum);
-						FOB.map[i+x][j+y].parties[FOB.map[i+x][j+y].parties.length-1].mapLoc = [i+x,j+y];
-						// update the party and actor map location values 
-						FOB.parties[partyNum].mapLoc = [i+x,j+y];
-						for (var l = 0; l < FOB.parties[partyNum].members.length; l++){
-							FOB.actrs[FOB.parties[partyNum].members[l]].mapLoc = [i+x,j+y];
-							FOB.actrs[FOB.parties[partyNum].members[l]].newInfo.moved.push({moveDir: [x,y]});
-						}
-						return FOB;
-					} else {
-						// console.log("You can't go that way");
-						
-					}
+	var i = FOB.parties[partyNum].mapLoc[0];
+	var j = FOB.parties[partyNum].mapLoc[1];
+	// //loop through map, then loop through the parties in each cell
+	// for(var i = 0; i < FOB.map.length; i++){
+	// 	for(var j = 0; j < FOB.map[i].length; j++){
+	for (var k = 0; k < FOB.map[i][j].parties.length; k++){
+		// check if party is the one we're looking for
+		if (FOB.map[i][j].parties[k] == partyNum){
+			if (testMapMove(FOB.map,i,j,x,y)){
+				// console.log("You go the way you wanted");
+				FOB.map[i][j].parties.splice(k,1);
+				FOB.map[i+x][j+y].parties.push(partyNum);
+				FOB.map[i+x][j+y].parties[FOB.map[i+x][j+y].parties.length-1].mapLoc = [i+x,j+y];
+				// update the party and actor map location values 
+				FOB.parties[partyNum].mapLoc = [i+x,j+y];
+				for (var l = 0; l < FOB.parties[partyNum].members.length; l++){
+					FOB.actrs[FOB.parties[partyNum].members[l]].mapLoc = [i+x,j+y];
+					FOB.actrs[FOB.parties[partyNum].members[l]].newInfo.moved.push({moveDir: [x,y]});
 				}
+				return FOB;
+			} else {
+				// console.log("You can't go that way");
+
 			}
-		}	
+		}
 	}
+	// 	}	
+	// }
 	return FOB;
 
 	function testMapMove(map,x,y,moveX,moveY){

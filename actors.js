@@ -6,8 +6,11 @@ function newInfoBlank() {
 		attack: [], // who YOU attacked {index: actor index num, hit: true or false, priority: 0}
 		defend: [], // who attacked YOU {index: actor index num, hit: true or false, priority: 0}
 		moved: [], // what direction you moved {moveDir: [x,y]}
-		neighbours: [], // who have you just seen for the first time {index: party index num, priority: 1}
-		departures: [], // who has left the cell, and in which direction {index: party index num, dir: direction, priority: 1}
+		neighbours: [], 
+		// who have you just seen for the first time 
+		//{name: string, registry: arrayVal, party: party index num, hostile: true, priority: 1}
+		departures: [], // who has left the cell, and in which direction 
+		//{name: string, registry: arrayVal, party: party index num, priority: 1}
 		casualties: [], // who has died in this update
 		misc: [] //
 	};
@@ -60,12 +63,7 @@ class Actor{
 		};
 		this.quests = [];
 		this.newInfo = newInfoBlank();
-		this.info = {
-			visibleNeighbours: [],
-			visibleItems: [],
-			visibleContainers: [],
-			visibleLairs: []
-		}
+		this.knownInfo = {neighbours:[]};
 		this.oauth = null;
 		this.distribFuncVal = 0;
 		this.visibleNeighbours = [];
@@ -165,13 +163,27 @@ function createReportString(input){
 	}
 
 	return reportString;
-	// attack: [], // who YOU attacked {index: actor index num, hit: true or false, priority: 0}
-	// defend: [], // who attacked YOU {index: actor index num, hit: true or false, priority: 0}
-	// moved: [], // what direction you moved {moveDir: [x,y]}
-	// neighbours: [], // who have you just seen for the first time {index: party index num, priority: 1}
-	// departures: [], // who has left the cell, and in which direction {index: party index num, dir: direction, priority: 1}
-	// casualties: [], // who has died in this update
-	// misc: [] //
+}
+
+function appendInfo(oldInfo, newInfo){
+	// console.log(newInfo);
+	for (var i = 0; i < newInfo.neighbours.length; i++){
+		console.log(i);
+		var toBeAdded = true;
+		for (var j = 0; j < oldInfo.neighbours.length; j++){
+			if (newInfo.neighbours[i].registry == oldInfo.neighbours[j].registry){
+				toBeAdded = false;
+			}
+		}
+		if (toBeAdded){
+			var newEntry = {
+				registry: newInfo.neighbours[i].registry,
+				party: newInfo.neighbours[i].party
+			}
+			oldInfo.neighbours.push(newEntry);
+		}
+	}
+	return oldInfo;
 }
 
 class Goodguy extends Actor{
@@ -207,5 +219,6 @@ module.exports = {
 	Goodguy,
 	Badguy,
 	distribFuncs,
-	newInfoBlank
+	newInfoBlank,
+	appendInfo
 }

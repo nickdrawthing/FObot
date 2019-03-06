@@ -127,7 +127,16 @@ function parseActorInput(_FOB, callback){
 								var thatActorNum = _FOB.parties[thatPartyRegNum].members[n];
 								// TODO: check if you've alrady seen this character before!
 								if (utils.testVs(_FOB.actrs[thisActorNum].current.perception,_FOB.actrs[thatActorNum].current.sneak)){
-									_FOB.actrs[thisActorNum].newInfo.neighbours.push(_FOB.actrs[thatActorNum].name);
+									_FOB.actrs[thisActorNum].newInfo.neighbours.push(
+										{
+											name: _FOB.actrs[thatActorNum].name, 
+											registry: _FOB.actrs[thatActorNum].registry, 
+											party: _FOB.actrs[thatActorNum].party, 
+											hostile: true, 
+											priority: 1
+										// _FOB.actrs[thatActorNum].name
+										}
+									);
 								}
 							}	
 						}
@@ -141,6 +150,7 @@ function parseActorInput(_FOB, callback){
 	for (var i = 0; i < _FOB.actrs.length; i++){
 		// var thisActor = _FOB.actrs[i];
 		actors.distribFuncs[_FOB.actrs[i].distribFuncVal](_FOB.actrs[i].oauth,_FOB.actrs[i].newInfo);
+		_FOB.actrs[i].knownInfo = actors.appendInfo(_FOB.actrs[i].knownInfo, _FOB.actrs[i].newInfo);
 		_FOB.actrs[i].newInfo = actors.newInfoBlank();
 		// _FOB.actrs[i] = thisActor;
 
@@ -158,7 +168,7 @@ function startInputCycle(_FOB){
 		// console.log(ac);
 	}
 	require('dns').resolve('www.twitter.com', function(err) {
-	  	if (!err) {
+	  	if (!!err) {
 	    	console.log("No connection");
 	    	setTimeout(startInputCycle,1000*2.5,_FOB);
 	  	} else {
