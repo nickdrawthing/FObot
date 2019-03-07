@@ -47,10 +47,10 @@ var getInput = {
 			_actor.act = "w";
 		} else if (randChoice >= 0.2 && randChoice < 0.4){
 			_actor.act = "a";
-		} else if (randChoice >= 0.4 && randChoice < 0.6){
-			_actor.act = "s";
-		} else if (randChoice >= 0.6 && randChoice < 0.8){
-			_actor.act = "d";
+		// } else if (randChoice >= 0.4 && randChoice < 0.6){
+		// 	_actor.act = "s";
+		// } else if (randChoice >= 0.6 && randChoice < 0.8){
+		// 	_actor.act = "d";
 		} else if (randChoice >= 0.8){
 			_actor.act = null;
 		}
@@ -126,17 +126,19 @@ function parseActorInput(_FOB, callback){
 								var thisActorNum = _FOB.parties[thisPartyRegNum].members[m];
 								var thatActorNum = _FOB.parties[thatPartyRegNum].members[n];
 								// TODO: check if you've alrady seen this character before!
-								if (utils.testVs(_FOB.actrs[thisActorNum].current.perception,_FOB.actrs[thatActorNum].current.sneak)){
-									_FOB.actrs[thisActorNum].newInfo.neighbours.push(
-										{
-											name: _FOB.actrs[thatActorNum].name, 
-											registry: _FOB.actrs[thatActorNum].registry, 
-											party: _FOB.actrs[thatActorNum].party, 
-											hostile: true, 
-											priority: 1
-										// _FOB.actrs[thatActorNum].name
-										}
-									);
+								if (!utils.knownNeighbour(_FOB.actrs[thisActorNum].knownInfo, _FOB.actrs[thatActorNum].registry)){
+									if (utils.testVs(_FOB.actrs[thisActorNum].current.perception,_FOB.actrs[thatActorNum].current.sneak)){
+										_FOB.actrs[thisActorNum].newInfo.neighbours.push(
+											{
+												name: _FOB.actrs[thatActorNum].name, 
+												registry: _FOB.actrs[thatActorNum].registry, 
+												party: _FOB.actrs[thatActorNum].party, 
+												hostile: true, 
+												priority: 1
+											// _FOB.actrs[thatActorNum].name
+											}
+										);
+									}
 								}
 							}	
 						}

@@ -20,6 +20,23 @@ function moveParty(FOB,partyNum,x,y){
 				for (var l = 0; l < FOB.parties[partyNum].members.length; l++){
 					FOB.actrs[FOB.parties[partyNum].members[l]].mapLoc = [i+x,j+y];
 					FOB.actrs[FOB.parties[partyNum].members[l]].newInfo.moved.push({moveDir: [x,y]});
+					FOB.actrs[FOB.parties[partyNum].members[l]].knownInfo.neighbours = [];
+				}
+				// loop through remaining parties in previous cell to remove self from their known list
+				// loop through parties
+				for (var m = 0; m < FOB.map[i][j].parties.length; m++){
+					var partyNum = FOB.map[i][j].parties[m];
+					// loop through members of each party
+					for (var n = 0; n < FOB.parties[partyNum].members.length; n++){
+						var actorNum = FOB.parties[partyNum].members[n];
+						//loop through known info list
+						for (var o = 0; o < FOB.actrs[actorNum].knownInfo.neighbours.length; o++){
+							// remove all members with partyNum      // {"registry":8,"party":3}
+							if (FOB.actrs[actorNum].knownInfo.neighbours.party == partyNum){
+								FOB.actrs[actorNum].knownInfo.neighbours.splice(o,1);
+							}
+						}
+					}
 				}
 				return FOB;
 			} else {

@@ -32,5 +32,15 @@ module.exports = {
 			}
 		}
 		return retVal;
+	},
+
+	knownNeighbour: function(known, reg){
+		var retVal = false;
+		for (var nbr = 0; nbr < known.neighbours.length; nbr++){
+			if (known.neighbours[nbr].registry == reg) {
+				retVal = true;
+			}
+		}
+		return retVal;
 	}
 }

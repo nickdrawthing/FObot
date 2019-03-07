@@ -143,7 +143,7 @@ function createReportString(input){
 	if (input.neighbours.length > 0){
 		// gotta figure this out. Don't currently have access to the party or actors from here.
 		for (let nb of input.neighbours){
-			reportString += "You see a " + nb + ".\n";
+			reportString += "You see a " + nb.name + ".\n";
 		}
 	}
 
@@ -166,9 +166,7 @@ function createReportString(input){
 }
 
 function appendInfo(oldInfo, newInfo){
-	// console.log(newInfo);
 	for (var i = 0; i < newInfo.neighbours.length; i++){
-		console.log(i);
 		var toBeAdded = true;
 		for (var j = 0; j < oldInfo.neighbours.length; j++){
 			if (newInfo.neighbours[i].registry == oldInfo.neighbours[j].registry){
