@@ -13,18 +13,18 @@ module.exports = {
 				for (var i = 0; i < mapData.length; i++){
 					for (var j = 0; j < mapData[i].length; j++){
 						var pop = mapData[i][j].parties.length;
-						var popImg = "";
-						if (pop == 0){
-							popImg = "  ";
-						} else if (pop == 1){
-							popImg = "░░"
-						} else if (pop == 2){
-							popImg = "▒▒";
-						} else if (pop == 3){
-							popImg = "▓▓";
-						} else {
-							popImg = "██";
-						}
+						var popImg = "  ";
+						// if (pop == 0){
+						// 	popImg = "  ";
+						// } else if (pop == 1){
+						// 	popImg = "░░"
+						// } else if (pop == 2){
+						// 	popImg = "▒▒";
+						// } else if (pop == 3){
+						// 	popImg = "▓▓";
+						// } else {
+						// 	popImg = "██";
+						// }
 						for (var k = 0; k < pop; k++){
 							if (mapData[i][j].parties[k] == 0){
 								popImg = "XX";

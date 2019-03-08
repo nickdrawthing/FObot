@@ -42,5 +42,21 @@ module.exports = {
 			}
 		}
 		return retVal;
+	},
+
+	parseDirection: function(input){
+		var retVal = "";
+		if (input[0] == -1){
+			retVal += "north";
+		} else if (input[0] == 1){
+			retVal += "south";
+		}
+		if (input[1] == -1){
+			retVal += "west";
+		} else if (input[1] == 1){
+			retVal += "east";
+		}
+		retVal = retVal.charAt(0).toUpperCase() + retVal.slice(1);	
+		return retVal;
 	}
 }

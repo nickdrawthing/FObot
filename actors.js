@@ -10,7 +10,7 @@ function newInfoBlank() {
 		// who have you just seen for the first time 
 		//{name: string, registry: arrayVal, party: party index num, hostile: true, priority: 1}
 		departures: [], // who has left the cell, and in which direction 
-		//{name: string, registry: arrayVal, party: party index num, priority: 1}
+		//{name: string, moveDir: [x,y], priority: 1}
 		casualties: [], // who has died in this update
 		misc: [] //
 	};
@@ -124,16 +124,18 @@ function createReportString(input){
 		var allMoveStrings = "";
 		for (var i = 0; i < input.moved.length; i++){
 			var thisMoveString = "You traveled ";
-			if (input.moved[i].moveDir[0] == -1){
-				thisMoveString += "north";
-			} else if (input.moved[i].moveDir[0] == 1){
-				thisMoveString += "south";
-			}
-			if (input.moved[i].moveDir[1] == -1){
-				thisMoveString += "west";
-			} else if (input.moved[i].moveDir[1] == 1){
-				thisMoveString += "east";
-			}
+			var utils = require("./utils.js");
+			// if (input.moved[i].moveDir[0] == -1){
+			// 	thisMoveString += "north";
+			// } else if (input.moved[i].moveDir[0] == 1){
+			// 	thisMoveString += "south";
+			// }
+			// if (input.moved[i].moveDir[1] == -1){
+			// 	thisMoveString += "west";
+			// } else if (input.moved[i].moveDir[1] == 1){
+			// 	thisMoveString += "east";
+			// }
+			thisMoveString += utils.parseDirection(input.moved[i].moveDir);
 			allMoveStrings += txtPrs.makeReadable(thisMoveString) + "\n";
 		}
 		reportString += allMoveStrings;		
@@ -149,12 +151,27 @@ function createReportString(input){
 
 	// departures
 	if (input.departures.length > 0){
-		// use the same logic as above ^ 
+		var utils = require("./utils.js");
+		var whoWentWhere = [[[],[],[]],[[],[],[]],[[],[],[]]];
+		for (let dep of input.departures){
+			// reportString += txtPrs.makeReadable(dep.name + " went " + utils.parseDirection(dep.moveDir)) + "\n";
+			whoWentWhere[dep.moveDir[0]+1][dep.moveDir[1]+1].push(dep.name);
+		}
+		for (var i = 0; i < whoWentWhere.length; i++){
+			for (var j = 0; j < whoWentWhere[i].length; j++){
+				if (whoWentWhere[i][j].length > 0){
+					reportString += txtPrs.makeReadable(txtPrs.listifyStringArray(whoWentWhere[i][j]) + " went " + utils.parseDirection([i-1,j-1])) + "\n";
+				}
+			}
+		}
 	}
 
 	// casualties
 	if (input.casualties.length > 0){
 		// ???? probably same as above?
+		for (let dead of input.casualties){
+			reportString += txtPrs.makeReadable(dead.name + " was " + dead.deathVerb + " by " + dead.killer);
+		}
 	}
 
 	// misc
